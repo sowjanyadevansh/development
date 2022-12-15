@@ -1,34 +1,36 @@
-# Node.js with Angular
-# Build a Node.js project that uses Angular.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+trigger:
+- main
 
 pool:
-  name: Azure Pipelines
-  demands:
-  - npm
-  - azureps
+ vmImage: 'ubuntu-latest'
 
 steps:
-- task: Npm@1
-  displayName: 'npm install'
-  inputs:
-    workingDir: .
-    verbose: false
+- task: NodeTool@0
+ inputs:
+   versionSpec: '12.x'
+ displayName: 'Install Node.js'
 
-- task: Npm@1
-  displayName: 'npm custom'
-  inputs:
-    command: custom
-    workingDir: .
-    verbose: false
-    customCommand: 'run build'
+- script: |
+   npm install -g @angular/cli
+   npm install 
+ workingDirectory: $(Build.SourcesDirectory)/site
+ displayName: 'npm install'
 
-- task: AzureFileCopy@2
-  displayName: 'AzureBlob File Copy'
-  inputs:
-    SourcePath: dist/AngularDemo
-    azureSubscription: 'freetrail'
-    Destination: AzureBlob
-    storage: angularstoragedev
-    ContainerName: '$web'
+
+- script: npm run lint
+ workingDirectory: $(Build.SourcesDirectory)/site
+ displayName: 'Lint Angular'
+
+- script: npm run build --prod
+ workingDirectory: $(Build.SourcesDirectory)/site
+ displayName: 'npm build'
+
+- script: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+ workingDirectory: $(Build.SourcesDirectory)/site
+ displayName: 'npm test'
+
+- publish: $(System.DefaultWorkingDirectory)/site/dist
+ artifact: angular-app
+
+- publish: $(System.DefaultWorkingDirectory)/arm-templates
+ artifact: arm-templates
