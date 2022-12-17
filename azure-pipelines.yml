@@ -21,7 +21,54 @@ stages:
        displayName: 'Install Node.js'
        inputs:
         versionSpec: '11.x'
-        
-- stage: 'BuildTest'
+      -script: |
+        npm install -g @angular/cli
+        npm install 
+      displayName: 'install dependencies' 
+
+      - task: Npm@1
+      displayName: 'Dev Build'
+      inputs:
+        command: 'custom'
+        customCommand: 'run build --configuration=dev'
+        condition:  eq(variables['branchName'],'main')
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifacts'
+        inputs:
+          PathtoPublish: dist
+          ArtifcatName: $(artifactName)
+          publishLocation: 'Conatainer'
+
+     - task: Npm@1
+       displayName: NPM Test
+       inputs:
+         command: 'custom'
+         customCommand: 'run test -- --watch=false --code-coverage --karma-config ./karma.conf.ci.js'
+         verbose: true
+
+     - task: PublishTestResults@2
+       condition: succeededOrFailed()
+       inputs:
+         testResultsFormats: 'JUnit'
+         testResultsFiles: '**/TESTS*.xml'
+       displayName: 'Publsih Unit Test Results'
+
+     - task: PublishCodeCoverageResults@1
+       displayName: 'Publish code coverage Angular results'
+       condition: succeededOrFailed()
+       inputs:
+         codeCoverageTool: Coberture
+         summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+         reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
+         failIfCoverageEmpty: false
+
+- stage: Deploy_dev
+    displayName: 'Deploy to dev'
+    dependsOn: BuildTest
+    condition: and(succeded('BuildTest'),eq(variables['branchName'],'main'))
+
+
+
+
  
 
