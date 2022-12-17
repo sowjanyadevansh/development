@@ -16,6 +16,7 @@ stages:
   displayName: 'Build & Test'
   jobs:
   - job: build
+    displayName: 'Build artifacts'
     steps:
      -task: NodeTool@0
       displayName: 'Install Node.js'
