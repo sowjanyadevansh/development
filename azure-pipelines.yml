@@ -29,7 +29,7 @@ stages:
         npm install 
         displayName: 'install dependencies'
     - task:Npm@1
-      displayName: Dev Build
+      displayName: 'Dev Build'
       inputs:
       command:'custom'
       customCommand:'run build --configuration=dev'
