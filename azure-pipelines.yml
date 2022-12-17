@@ -12,16 +12,22 @@ parameters:
     - Dev
   
 
-steps:
-- task: NodeTool@0
- inputs:
-   versionSpec: '12.x'
- displayName: 'Install Node.js'
+stages:
+ -stage:'BuildTest'
+  displayName:'Build & Test'
+  jobs:
+   -job:'build'
+   displayName:'Build artifacts'
+   steps:
+    - task: NodeTool@0
+      displayName: 'Install Node.js'
+      inputs:
+        versionSpec: '12.x'
 
-- script: |
-   npm install -g @angular/cli
-   npm install 
- displayName: 'npm install'
+    - script: |
+        npm install -g @angular/cli
+        npm install 
+        displayName: 'install dependencies'
 
 
 - script: npm run lint
