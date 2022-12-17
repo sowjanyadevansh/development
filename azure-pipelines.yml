@@ -2,7 +2,14 @@ trigger:
 - main
 
 pool:
- vmImage: 'ubuntu-latest'
+ vmImage: 'Azure Pipelines'
+parameters:
+  - name: environment
+    displayName: Environment
+    type: string
+    default:Dev
+    values:
+    - Dev
 
 steps:
 - task: NodeTool@0
@@ -13,12 +20,10 @@ steps:
 - script: |
    npm install -g @angular/cli
    npm install 
- workingDirectory: $(Build.SourcesDirectory)/site
  displayName: 'npm install'
 
 
 - script: npm run lint
- workingDirectory: $(Build.SourcesDirectory)/site
  displayName: 'Lint Angular'
 
 - script: npm run build --prod
