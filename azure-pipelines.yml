@@ -19,28 +19,31 @@ stages:
     displayName: 'Build artifacts'
     steps:
      - task: NodeTool@0
-      displayName: 'Install Node.js'
-      inputs:
-        versionSpec: '11.x'
-      -script: |
+       displayName: 'Install Node.js'
+       inputs:
+         versionSpec: '11.x'
+
+     - script: |
         npm install -g @angular/cli
         npm install 
        displayName: 'install dependencies' 
 
-      -task: Npm@1
+     - task: Npm@1
        displayName: 'Dev Build'
        inputs:
          command: 'custom'
          customCommand: 'run build --configuration=dev'
-         condition:  eq(variables['branchName'],'main')
-      -task: PublishBuildArtifacts@1
+       condition:  eq(variables['branchName'],'main')
+
+     - task: PublishBuildArtifacts@1
        displayName: 'Publish Artifacts'
        inputs:
          PathtoPublish: dist
-         ArtifcatName: $(artifactName)
-         publishLocation: 'Conatainer'
+         ArtifactName: $(artifactName)
+         publishLocation: 'Container'
+       #condition:  ne(variables['Build.Reason'],'PullRequest')
 
-      -task: Npm@1
+     - task: Npm@1
        displayName: NPM Test
        inputs:
          command: 'custom'
@@ -50,7 +53,7 @@ stages:
      - task: PublishTestResults@2
        condition: succeededOrFailed()
        inputs:
-         testResultsFormats: 'JUnit'
+         testResultsFormat: 'JUnit'
          testResultsFiles: '**/TESTS*.xml'
        displayName: 'Publsih Unit Test Results'
 
@@ -58,20 +61,20 @@ stages:
        displayName: 'Publish code coverage Angular results'
        condition: succeededOrFailed()
        inputs:
-         codeCoverageTool: Coberture
+         codeCoverageTool: Cobertura
          summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
          reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
          failIfCoverageEmpty: false
 
 - stage: Deploy_dev
-    displayName: 'Deploy to dev'
-    dependsOn: BuildTest
-    condition: and(succeded('BuildTest'),eq(variables['branchName'],'main'))
-    jobs:
-      -deployment: 'Deploy'
-       displayName: 'Deploy'
-       environment: 'Dev'
-       strategy:
+  displayName: 'Deploy to dev'
+  dependsOn: BuildTest
+  condition: and(succeded('BuildTest'),eq(variables['branchName'],'main'))
+  jobs:
+    - deployment: 'Deploy'
+      displayName: 'Deploy'
+      environment: 'Dev'
+      strategy:
         runOnce:
           deploy:
             steps:
