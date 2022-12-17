@@ -10,44 +10,18 @@ parameters:
     default: Dev
     values:
     - Dev
-  
 
 stages:
- -stage:'BuildTest'
+- stage: 'BuildTest'
   displayName:'Build & Test'
   jobs:
-   -job:'build'
-   displayName:'Build artifacts'
-   steps:
-    - task: NodeTool@0
-      displayName: 'Install Node.js'
-      inputs:
-        versionSpec: '12.x'
+  - job: build
+    steps:
+      -task: NodeTool@0
+       displayName: 'Install Node.js'
+       inputs:
+        versionSpec: '11.x'
+        
+- stage: 'BuildTest'
+ 
 
-    - script: |
-        npm install -g @angular/cli
-        npm install 
-        displayName: 'install dependencies'
-    - task:Npm@1
-      displayName: 'Dev Build'
-      inputs:
-      command:'custom'
-      customCommand:'run build --configuration=dev'
-      condition:  eq(variables['branchName'],'main')
-      
-- script: npm run lint
- displayName: 'Lint Angular'
-
-- script: npm run build --prod
- workingDirectory: $(Build.SourcesDirectory)/site
- displayName: 'npm build'
-
-- script: npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
- workingDirectory: $(Build.SourcesDirectory)/site
- displayName: 'npm test'
-
-- publish: $(System.DefaultWorkingDirectory)/site/dist
- artifact: angular-app
-
-- publish: $(System.DefaultWorkingDirectory)/arm-templates
- artifact: arm-templates
