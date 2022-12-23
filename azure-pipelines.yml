@@ -93,7 +93,7 @@ stages:
                   azureSubscription: 'Free Trial'
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript' 
-                  inlineScript: 'az storage blob upload-batch --account-name angularstoragedev --destination "\$web" --source '
+                  inlineScript: 'az storage blob upload-batch --account-name angularstoragedev --destination "\$web" --source ''$(Pipeline.Workspace)/$(artifcatName)/Azure Pipelines'''
 
 
 
