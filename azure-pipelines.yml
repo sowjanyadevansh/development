@@ -90,7 +90,7 @@ stages:
               - task: AzureCLI@2
                 displayName: 'Upload new Static Website'
                 inputs:
-                  azureSubscription: 'Free Trial'
+                  azureSubscription: 'freetrial'
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript' 
                   inlineScript: 'az storage blob upload-batch --account-name angularstoragedev --destination "\$web" --source ''$(Pipeline.Workspace)/$(artifcatName)/Azure Pipelines'''
