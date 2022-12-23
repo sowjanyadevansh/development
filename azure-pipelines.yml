@@ -83,14 +83,14 @@ stages:
               - task: AzureCLI@2
                 displayName: 'Clear Static website'
                 inputs:
-                  azureSubscription: 'sowjanyadevansh'
+                  azureSubscription: 'sow-angular-service-connection'
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript'
                   inlineScript: 'az storage blob delete-batch --account-name angularstoragedev --source "\$web"'
               - task: AzureCLI@2
                 displayName: 'Upload new Static Website'
                 inputs:
-                  azureSubscription: 'sowjanyadevansh'
+                  azureSubscription: 'sow-angular-service-connection'
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript' 
                   inlineScript: 'az storage blob upload-batch --account-name angularstoragedev --destination "\$web" --source ''$(Pipeline.Workspace)/$(artifcatName)/Azure Pipelines'''
