@@ -18,10 +18,7 @@ stages:
   - job: build
     displayName: 'Build artifacts'
     steps:
-     - task: UseNode@1
-       inputs:
-         version: '6.14.4'
-     - task: NodeTool@0
+      - task: NodeTool@0
        displayName: 'Install Node.js'
        inputs:
          versionSpec: '12.x'
@@ -41,7 +38,7 @@ stages:
      - task: PublishBuildArtifacts@1
        displayName: 'Publish Artifacts'
        inputs:
-         PathtoPublish: $(Build.ArtifactStagingDirectory)
+         PathtoPublish: dist
          ArtifactName: $(artifactName)
          publishLocation: 'Container'
        #condition:  ne(variables['Build.Reason'],'PullRequest')
