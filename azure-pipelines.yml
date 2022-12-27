@@ -38,7 +38,7 @@ stages:
      - task: PublishBuildArtifacts@1
        displayName: 'Publish Artifacts'
        inputs:
-         PathtoPublish: dist
+         PathtoPublish: $(Build.ArtifactStagingDirectory)
          ArtifactName: $(artifactName)
          publishLocation: 'Container'
        #condition:  ne(variables['Build.Reason'],'PullRequest')
