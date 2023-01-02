@@ -3,13 +3,6 @@ trigger:
 
 pool:
  vmImage: 'ubuntu-latest'
-parameters:
-  - name: environment
-    displayName: Environment
-    type: string
-    default: Dev
-    values:
-    - Dev
 
 steps:
      - task: NodeTool@0
