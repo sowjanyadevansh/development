@@ -26,6 +26,7 @@ stages:
      - script: |
         npm install -g @angular/cli
         npm install 
+        ng build --prod
        displayName: 'install dependencies' 
 
      - task: Npm@1
