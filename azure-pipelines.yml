@@ -93,7 +93,7 @@ stages:
                   azureSubscription: 'sow-angular-service-connection'
                   scriptType: 'bash'
                   scriptLocation: 'inlineScript' 
-                  inlineScript: 'az storage blob upload-batch --account-name angularstoragedev --destination "\$web" --source ''$(Pipeline.Workspace)/$(artifcatName)/Azure Pipelines'''
+                  inlineScript: 'az storage blob upload-batch --account-name angularstoragedev --destination "\$web" --source ''$(Pipeline.Workspace)/$(artifcatName)/angular'''
 
 
 
